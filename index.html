@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html ng-app="CadClientes">
+<head>
+    <meta charset="UTF-8">
+    <script src="angular/angular.js"></script>
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script>
+        angular.module("CadClientes", []);
+        angular.module("CadClientes").controller("CadClientesCtrl", function ($scope) {
+            $scope.app = "Cadastro de Clientes";
+            $scope.clientes = [
+
+            ];
+
+
+            $scope.tipoClientes = [
+                {tipo: "Pessoa Física", codigo: "10"},
+                {tipo: "Pessoa Jurídica", codigo: "20"},
+                {tipo: "Colaborador", codigo: "30"}
+            ];
+
+
+            $scope.adicionarCliente = function (cliente) {
+                $scope.clientes.push(angular.copy(cliente));
+                $scope = new date(cliente);
+                delete $scope.cliente;
+
+            };
+
+            $scope.apagarClientes = function (clientes) {
+                $scope.clientes = clientes.filter(function (cliente) {
+                    if (!cliente.selecionado) return cliente;
+                });
+            };
+
+            $scope.temclienteSelecionado = function (clientes) {
+                return clientes.some(function (cliente) {
+                    return cliente.selecionado;
+                });
+            };
+
+
+            $scope.classe1 = "selecionado";
+            $scope.classe1 = "negrito";
+        });
+    </script>
+    <title>Cadastro de Clientes</title>
+</head>
+<body ng-controller="CadClientesCtrl">
+<div class="jumbotron w-50">
+    <h3 class="bg-secondary text-white">{{app}}</h3>
+    <input class="form-control mt-8" ng-model="Buscar" placeholder="Filtrar por nome">
+    <table ng-show="clientes.length > 0" class="table mt-4 ">
+        <tr>
+            <td></td>
+            <td><b>Nome</b></td>
+            <td><b>Código</b></td>
+            <td><b>Classificação</b></td>
+            <td><b>Código da classificação</b></td>
+        </tr>
+        <tr ng-class="{selecionado: cliente.selecionado, negrito: cliente.selecionado}" ng-repeat="cliente in clientes | filter:Buscar |orderBy: 'nome'">
+            <td><input type="checkbox" ng-model="cliente.selecionado"></td>
+            <td>{{cliente.nome | uppercase}}</td>
+            <td>{{cliente.codigo}}</td>
+            <td>{{cliente.tipoClientes.tipo}}</td>
+            <td>{{cliente.tipoClientes.codigo}}   </td>
+        </tr>
+    </table>
+    <hr>
+    <div class="form-row">
+        <div class="col-md-6">
+            <input type="text" ng-model="cliente.nome" class="form-control mb-2" placeholder="Nome">
+        </div>
+        <div class="col-md-6">
+            <input type="text" ng-model="cliente.codigo" class="form-control mb-2" placeholder="Código">
+        </div>
+    </div>
+    <select class="form-control" ng-model="cliente.tipoClientes"
+            ng-options="tipoCliente.tipo for tipoCliente in tipoClientes">
+        <option value="" disabled>Selecione um tipo de cliente</option>
+    </select>
+    <br>
+    <button class="btn btn-default bg-success text-white mt-3" ng-click="adicionarCliente(cliente)"
+            ng-disabled="!cliente.nome||!cliente.codigo">Adicionar
+    </button>
+    <button class="btn btn-default bg-danger text-white mt-3" ng-click="apagarClientes(clientes)" ng-show="temclienteSelecionado(clientes)">Apagar</button>
+
+</div>
+</body>
+</html>
+
+
